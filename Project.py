@@ -3,7 +3,6 @@ import os
 from time import sleep
 import getpass
 import random
-from captcha.image import ImageCaptcha
 from datetime import datetime
 
 
@@ -40,13 +39,13 @@ def signin():
     ob1.dob += m
     m = input("Enter your aadhar card no:")
     ob1.adharcardno += m
-    print("\nIf you want to see the password press 1 otherwise press 0.\n")
+    print("\n")
+    print("\033[1;31;43m If you want to see the password press 1 otherwise press 0.\n")
     ob1.seepass = int(input())
     if ob1.seepass == 1:
         ob1.password = input("enter ur password:")
     elif ob1.seepass== 0:
-        ob1.password = getpass.getpass(prompt='Password:')  # It will ask to enter password and display * on the screen
-
+        ob1.password = getpass.getpass(prompt='Password:') 
     print("\nIf you want to see the Confirmed password press 1 otherwise press 0.\n")
     ob1.cseepass = int(input())
     if ob1.cseepass == 1:
@@ -92,7 +91,8 @@ def signin():
     print("\nYour USER-ID is:" + ob1.userid)
 
 
-    print("which type of account you want to make \n press 1 for saving \n press 2 for current\n")
+    print("\n")
+    print("\033[1;32;43m which type of account you want to make \n press 1 for saving \n press 2 for current\n")
     typeacc=int(input())
     if typeacc==1:
         savingintrest()
@@ -108,14 +108,17 @@ def signin():
     mycursor.execute("select * from credential1")
     for i in mycursor:
         print(i)
+    start()
 
 
 def loginmenu():
     aydb = mysql.connector.connect(host='localhost',user='root', password = "Aditya1234",db='pythonsem1project')
+    print("\n")
+    print("\033[1;31;43m \n")
     
     
 
-    print("1.press 1 for change addres \n2. press2 for money deposite\n 3.press 3 for bank withdraw \n4. press 4 for print bank statement \n5. press 5 transfer money \n6.  press 6 to close account \n 7.press 7 to logout")
+    print("1. Press 1 for change addres \n2. Press 2 for money deposite\n3. Press 3 for bank withdraw \n4. Press 4 for print bank statement \n5. Press 5 transfer money \n6. Press 6 to close account \n7. Press 7 to change Phone Number\n8. Press 8 to change the Email-ID\n9. Press 9 to change the password\n10. Press 10 to Change transection password\n11. Press 11 to logout.")
     n=int(input())
     if n==1:
         corsor = aydb.cursor()
@@ -126,10 +129,16 @@ def loginmenu():
         corsor.execute(sql,val)
         aydb.commit()
         corsor.execute("select * from credential1")
-        for i in corsor: 
-            print(i)
         print("\naddress sucessfully changed\n")
-        loginmenu()    
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass    
         mydb.close()
 
     elif n==2:
@@ -146,7 +155,6 @@ def loginmenu():
         for i in adicorsor:
             print(i)
             if i[10] == accno:
-                print("adi")
                 s+=i[9]
                 print(s)
               
@@ -178,9 +186,16 @@ def loginmenu():
         corsur.execute(aql,aal)
         maydb.commit()   
         corsur.execute("select*from statement")
-        for i in corsur:
-            print(i)
-        loginmenu()
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass
+        
     elif n==3:
         now = datetime.now()
         date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
@@ -193,23 +208,22 @@ def loginmenu():
                  
         adicorsor.execute("select* from credential1")
         for i in adicorsor:
-            print(i)
             if i[10] == accno:
-                print("adi")
                 s+=i[9]
                 print(s)
               
         z=int(s)
         z=z-ammount
         l=str(z)
-        print(l)
+
+        tp = input("Enter you Tp:")
         
         wq= str(ammount)
         maydb = mysql.connector.connect(host='localhost',user='root', password = "Aditya1234",db='pythonsem1project') 
         corsor = maydb.cursor()
-        ql = "UPDATE credential1 SET initialammount=%s WHERE accnumber= %s"
+        ql = "UPDATE credential1 SET initialammount=%s WHERE accnumber= %s and tp = %s"
 
-        al=(l,accno)
+        al=(l,accno,tp)
         corsor.execute(ql,al)
         maydb.commit()
         corsor.execute("select * from credential1")
@@ -224,21 +238,40 @@ def loginmenu():
         aal = (s,wq,accno,date_time)
         corsor.execute(aql,aal)
         maydb.commit()   
-        corsor.execute("select*from statement")
+        corsor.execute("select*from credential1")
+        print("\nMoney withdrawal \n")
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass
 
-        print("\nMoney withdrawled \n")
-        loginmenu()
+
     elif n==4:
         maydb = mysql.connector.connect(host='localhost',user='root', password = "Aditya1234",db='pythonsem1project') 
         corsur = maydb.cursor()
-        a=input("enter account number of which you want to display statement")
-        print(" balance deposit withdraw  accnumber      date      time")
+        a=input("enter account number of which you want to display statement:")
+        print(" balance  deposit  withdraw   accnumber    date    time")
         corsur.execute("select*from statement")
         for i in corsur:
             if i[3]==a:
                print(i)
-            
+        
 
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass
+            
 
     elif n==5:
         now = datetime.now()
@@ -260,36 +293,30 @@ def loginmenu():
                 for i in adicorsor:
                     print(i)
                     if i[10] == accno:
-                        print("adi")
                         s+=i[9]
                         print(s)
                       
                 z=int(s)
                 z=z-ammount
                 l=str(z)
-                print(l)
+                tp = input("Enter you Transection Password:")
                 
+                ql = "UPDATE credential1 SET initialammount=%s WHERE accnumber= %s and tp = %s"
 
-                #maydb = mysql.connector.connect(host='localhost',user='root', password = "Aditya1234",db='pythonsem1project') 
-                #adicorsur = adiydb.cursor()
-                ql = "UPDATE credential1 SET initialammount=%s WHERE accnumber= %s"
-
-                al=(l,accno)
+                al=(l,accno,tp)
                 adicorsor.execute(ql,al)
                 adiydb.commit()
                 u=''
-                adicorsor.execute("select* from credential1")
+                adicorsor.execute("select  * from credential1")
                 for i in adicorsor:
                     print(i)
                     if i[10] == accno1:
-                        print("adi")
                         u+=i[9]
                         print(u)
                       
                 q=int(u)
                 q=q+ammount
                 x=str(q)
-                print(q)
                 
 
                 maydb = mysql.connector.connect(host='localhost',user='root', password = "Aditya1234",db='pythonsem1project') 
@@ -303,8 +330,17 @@ def loginmenu():
                 for i in corsur: 
                     print(i)
                 print("\nMoney deposited \n")
-                loginmenu()
-                        
+                a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            start()
+        elif a == 0:
+            exit()
+        else:
+            pass
+
+        maydb.close()    
             
             
         
@@ -313,35 +349,58 @@ def loginmenu():
 
     elif n==6:
 
-        corsor=aydb.cursor()
-        j=input("enter your account no ")
-        dd="delete from credential1  WHERE accnumber= %s"
-        gh=j
-        corsor.execute(dd,j)
-        print("deleted")
-        '''eql = "delete  from credential1  WHERE accnumber= %s"
-        k=(b)'''
+        now = datetime.now()
+        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        aydb = mysql.connector.connect(host='localhost', database='pythonsem1project', user='root', password='Aditya1234')
+        corsor = aydb.cursor()
+        acno = input('Enter customer Account No :')
+        sql ='update credential1 set accnumber="close" where accnumber ='+acno+';'
         
+        corsor.execute(sql)
         aydb.commit()
-        corsor.execute("select * from credential1")
-        for i in corsor: 
-            print(i)
+        print('Account closed')
         print("\naccount deleted sucessfully \n")
-        loginmenu()    
+        try:
+            corsor.execute
+            corsor.execute("CREATE TABLE closed_account ( accnumber varchar(20),date varchar(20))")
+        except:
+            print("table exisits")
+        aql = "INSERT INTO closed_account(accnumber,date)VALUES(%s,%s)"
+        aal = (acno,date_time)
+        corsor.execute(aql,aal)
+        aydb.commit()
+
+        
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass
+
         aydb.close()
     elif n==7:
         corsor = aydb.cursor()
-        a=input("enter your new phone no  ")  
-        b=input("enter your account no ")  
-        sql = "UPDATE credential1 SET address=%s  WHERE accnumber= %s"
+        a=input("enter your new phone no: ")  
+        b=input("enter your account password: ")  
+        sql = "UPDATE credential1 SET phonenum=%s  WHERE pasword= %s"
         val=(a,b)
         corsor.execute(sql,val)
         aydb.commit()
         corsor.execute("select * from credential1")
-        for i in corsor: 
-            print(i)
-        print("\nphone no sucessfully changed\n")
-        loginmenu()    
+        print("\nphone number sucessfully changed\n")
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass    
 
 
     
@@ -350,14 +409,12 @@ def loginmenu():
     elif n==8:
         corsor = aydb.cursor()
         a=input("enter your new email  ")  
-        b=input("enter your account no ")  
-        sql = "UPDATE credential1 SET emailid=%s  WHERE accnumber= %s"
+        b=input("enter your account password ")  
+        sql = "UPDATE credential1 SET emailid=%s  WHERE pasword= %s"
         val=(a,b)
         corsor.execute(sql,val)
         aydb.commit()
         corsor.execute("select * from credential1")
-        for i in corsor: 
-            print(i)
         print("\nemail  sucessfully changed\n")
         loginmenu()    
 
@@ -373,14 +430,51 @@ def loginmenu():
         corsor.execute(sql,val)
         aydb.commit()
         corsor.execute("select * from credential1")
-        for i in corsor: 
-            print(i)
         print("\npassword sucessfully changed\n")
-        loginmenu()    
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass    
 
 
     
         aydb.close()
+
+    elif n==10:
+        corsor = aydb.cursor()
+        a=input("enter your new Transection password:")  
+        b=input("enter your account password:")  
+        sql = "UPDATE credential1 SET tp=%s  WHERE pasword= %s"
+        val=(a,b)
+        corsor.execute(sql,val)
+        aydb.commit()
+        corsor.execute("select * from credential1")
+        print("\nTransection password sucessfully changed\n")
+        a= int(input("to do back to main menu press 1 or to exit press 0:"))
+        while(a!=1 and a!=0):
+            a = int(input("Please Enter the Correct Number:"))
+        if a == 1:
+            loginmenu()
+        elif a == 0:
+            exit()
+        else:
+            pass    
+
+
+    
+        aydb.close()
+
+    elif n == 11:
+        import time
+        print("you are loggin out.")
+        time.sleep(1.0)
+        print('You have been logged out successfully !!')
+        exit()
 
 
 
@@ -409,7 +503,7 @@ def capcha():
     print(a)
 
     
-    print("if you want to reload the capcha press 1 else 0\n")
+    print("\033[1;32;43m if you want to reload the capcha press 1 else 0\n")
     n=int(input())
     if n==1:
         capcha()
@@ -429,39 +523,57 @@ mydb = mysql.connector.connect(
 )
 def savingintrest():
     print("\n THE INTREST GIVEN ON MONEY IS 7.5% IN OUR BANK ON SAVING ACCOUNT \n")
-    # today = date.today()
-    # print("Today date is: ", today)
 def currentintrest():
     print("\n THE INTREST GIVEN ON MONEY IS 0% IN OUR BANK ON SAVING ACCOUNT \n")
-    # today = date.today()
-    # print("Today date is: ", today)
 
 def screen_clear():
-   # for mac and linux(here, os.name is 'posix')
    if os.name == 'posix':
       _ = os.system('clear')
    else:
-      # for windows platfrom
       _ = os.system('cls')
 
 
 def admin():
     screen_clear()
+    print("\033[1;33;42m \n")
+
+    aydb = mysql.connector.connect(host='localhost', database='pythonsem1project', user='root', password='Aditya1234')
+    corsor = aydb.cursor()
 
     print("WELCOME TO ADMIN ACCOUNT\n")
     username = input("ENTER USER NAME TO VALIDATE")
+    i = 0
     while(username!="pythonproject"):
-        username = input("\nYOU ENTERED WRONG USER NAME \n ENTER USER NAME TO VALIDATE")
+        if i <= 1:
+            username = input("\nYOU ENTERED WRONG USER NAME \n ENTER USER NAME TO VALIDATE")
+            i+=1
+        else:
+            admin()
+        
+
     password=input("ENTER YOUR PASSWORD\n")
+    k = 0
     while(password!="500083205@b31"):
-        password = input("\n YOU ENTERED WRONG PASSWORD\nENTER YOUR PASSWORD\n")
+        if k <= 1:
+            password = input("\n YOU ENTERED WRONG PASSWORD\nENTER YOUR PASSWORD\n")
+            k += 1
+        else:
+            admin()
     print("WELCOME MR ADMIN\n")
+    print("Account      Date        Time")
+    corsor.execute("select * from closed_account")
+    for j in corsor:
+        print(j)
+    aydb.close()
+
+
 
 
 
 def login():
 
     mycursor = mydb.cursor()
+    print("\033[1;33;42m \n")
 
     checkuserid = input("Enter user id\n")
     checkpassword= input("Enter password\n")
@@ -470,7 +582,6 @@ def login():
     mycursor.execute(sql)
     for i in mycursor:
         if i[11] == checkuserid:
-            print(i)
             ydb = mysql.connector.connect(
             host='localhost',
             user='root', 
@@ -481,7 +592,6 @@ def login():
             ql = "SELECT * FROM credential1"
             cursor.execute(ql)
             for j in cursor:
-                #print("a")
                 if j[3]==checkpassword:
                     capcha()
                     break
@@ -509,7 +619,6 @@ def start():
     elif choice==4:
         exit()
     else:
-        print("please enter correct choice\n")
+        print("\033[1;43;42m please enter correct choice\n")
 
 start()
-
